@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  database:
+    image: postgres:15.2-alpine3.17
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSGRES_USER=postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - 9001:5432
+  
+  servidor:
+    build: .
+    environment:
+      - NODE_ENV=production
+      - PORT=8000
+      - DATABASE_CLIENT=pg
+      - DATABASE_URL=postgres://postgres:postgres@database:5432/teste
+    ports:
+      - 9002:8000
+    depends_on:
+      - database
+
+volumes:
+  db-data:
